@@ -1,0 +1,9 @@
+# Develop
+venv/
+.vscode/
+
+# Settings
+.env
+
+# Cashes
+*.pyc
