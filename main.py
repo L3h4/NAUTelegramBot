@@ -3,14 +3,13 @@ from telebot import types
 import settings
 from loguru import logger
 
+@logger.catch
 def Bot():
-    @logger.catch
     @bot.message_handler(commands = ['start'])
     def start_func(message):
         logger.debug(f'{message.from_user.id} {message.from_user.first_name} started the bot')
         bot.send_message(message.chat.id, f'Hello, {message.from_user.first_name}, i am NAUBOT')
     
-    @logger.catch
     @bot.message_handler(content_types = ['text'])
     def echo(message):
         logger.debug(f'{message.from_user.id} {message.from_user.first_name} {message.text}')
