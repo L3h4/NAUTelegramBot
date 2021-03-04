@@ -8,23 +8,47 @@ import settings
 
 
 
-DataBase.Init(settings.DB_CONN_STR)
 
-@logger.catch
+
+
 class UserManager():
+  @logger.catch
   def __init__(self):
-    pass
+    DataBase.Init(settings.DB_CONN_STR)
+    self._session = None
+
+  def RequirePermissin(self, **kwargs):
+    return self.Wraps
+
+  def Wraps(self, func):
+    def wrapper(message):
+      self._session = DataBase.GetSession()
+      func(
+        message, 
+        self._addandorgetuser(
+          message.from_user.id, 
+          message.from_user.username, 
+          message.from_user.first_name, 
+          message.from_user.last_name
+        )
+      )
+      self._session.close()
+    return wrapper
+
+  @logger.catch
   def AddUser(self, Tg_id, UserName, FirstName, LastName):
-    session = DataBase.GetSession()
+    self._session = DataBase.GetSession()
+    self._addandorgetuser(Tg_id, UserName, FirstName, LastName)
+    self._session.close()
+
+  @logger.catch
+  def _addandorgetuser(self, Tg_id, UserName, FirstName, LastName):
     u = User(Tg_id, UserName, FirstName, LastName)
     newuser = False
-    if session.query(User).filter_by(Tg_id=Tg_id).first() is None:
-      session.add(u)
-      session.commit()
+    if self._session.query(User).filter_by(Tg_id=Tg_id).first() is None:
+      self._session.add(u)
+      self._session.commit()
       newuser = True
-    session.close()
-    logger.debug(f"User <{u}> {'Alredy exists' if not newuser else 'Has been created'}")
-    return newuser
-  
-  #def AddUserIfNeeded(self, Tg_id, UserName, FirstName, LastName):
-
+    logger.debug(f"User <{u}> was requesed ({'Alredy exists' if not newuser else 'Has been created'})")
+    #session.close()
+    return u
