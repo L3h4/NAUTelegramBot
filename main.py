@@ -1,13 +1,18 @@
 import telebot
 from telebot import types
-import settings
 from loguru import logger
+
+import settings
+from Bot.UserManager import UserManager
 
 @logger.catch
 def Bot():
+    UM = UserManager()
+
     @bot.message_handler(commands = ['start'])
     def start_func(message):
         logger.debug(f'{message.from_user.id} {message.from_user.first_name} started the bot')
+        UM.AddUser(message.from_user.id, message.from_user.username,  message.from_user.first_name, message.from_user.last_name)
         bot.send_message(message.chat.id, f'Hello, {message.from_user.first_name}, i am NAUBOT')
     
     @bot.message_handler(content_types = ['text'])
