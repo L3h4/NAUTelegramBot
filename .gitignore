@@ -2,8 +2,15 @@
 venv/
 .vscode/
 
+# Data
+*.sqlite3
+*.db
+
 # Settings
 .env
 
 # Cashes
 *.pyc
+
+# Logs
+logs/
