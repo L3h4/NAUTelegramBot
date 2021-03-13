@@ -18,7 +18,7 @@ class DataBase():
 
   @classmethod
   def GetSession(cls):
-    cls._engine = create_engine(cls._name)
+    cls._engine = create_engine(cls._name, connect_args={'check_same_thread': False})
     Base.metadata.create_all(bind=cls._engine)
     session = sessionmaker(bind=cls._engine)()
     cls._session = session

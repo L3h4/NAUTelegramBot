@@ -1,7 +1,8 @@
 from loader import bot, logger
 
-from Bot.handlers import start
 from Bot.middleware import middleware
+
+from Bot.handlers import *
 
 
 
